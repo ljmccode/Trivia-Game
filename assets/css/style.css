@@ -1,0 +1,23 @@
+body {
+    background-image: url(https://wallpapercave.com/wp/tfUMfjr.jpg);
+    background-size: cover;
+}
+
+.quiz-body {
+    text-align: center;
+    background-color: rgba(237, 231, 231, 0.8);
+    border: blue groove 2px;
+    max-width: 660px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 50px;
+    height: 500px;
+}
+
+h1 {
+    padding-top: 50px;
+}
+
+.start-button {
+    padding-top: 120px;
+}
