@@ -178,7 +178,7 @@ function displayFinish() {
     $("#question").html("<h3>All done, here's how you did!<h3>")
     $("#answersAndResults").append("<p>Correct: " + correct + "<p>");
     $("#answersAndResults").append("<p>Incorrect: " + incorrect + "<p>");
-    $("#answersAndResults").append("<p>Unanswerd: "+ unanswered + "<p>");
+    $("#answersAndResults").append("<p>Unanswered: "+ unanswered + "<p>");
     $("#reset").show();
     correct = 0;
     incorrect = 0;
