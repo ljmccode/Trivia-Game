@@ -62,10 +62,10 @@ function startCountdown() {
 function countdown() {
     $("#quiz-timer").html("<h2> Time remaining: " + timer + "<h2>");
     timer--;
-    console.log(timer)
+    console.log(timer);
     if (timer === -1) {
         console.log("stop timer")
-        // if timer hits 0, display answer and stop timer
+        // if timer hits -1, display answer and stop timer
         $("#answersAndResults").html("<h3>You ran out of time! The correct answer is " + randomQuestion.options[randomQuestion.correct] + "</h3>");
         stopTimer();
         unanswered++;
@@ -75,7 +75,7 @@ function countdown() {
 }
 
 function stopTimer() {
-    timerRunning == false;
+    timerRunning = false;
     clearInterval(interval);
 }
 
@@ -107,12 +107,12 @@ function showQuestion() {
         // store value of user's guess as integer to compare with correct answer
         userGuess = parseInt($(this).attr("data-value"));
         console.log("User guess answer is " + userGuess);
-        timerRunning == false;
 
         if(userGuess === randomQuestion.correct) {
             correct++;
             userGuess = "";
             stopTimer()
+            console.log("Is the timer running? " + timerRunning)
             $("#answersAndResults").html("<h3>Correct!!</h3>")
             scoreTracker();
             determineFinish();
@@ -120,6 +120,7 @@ function showQuestion() {
             incorrect++;
             userGuess = "";
             stopTimer();
+            console.log("Is the timer running? " + timerRunning)
             $("#answersAndResults").html("<h3>Sorry, the correct answer is " + randomQuestion.options[randomQuestion.correct])
             scoreTracker();
             determineFinish();
@@ -150,7 +151,6 @@ function determineFinish() {
         showQuestion();
     }
 
-
     // waits 3 seconds
     }, 3000);
 }
@@ -166,5 +166,14 @@ function displayFinish() {
     incorrect = 0;
     unanswered = 0;
 }
+
+$("#reset").on("click", function() {
+    $("#reset").hide();
+    $("#question").empty();
+    $("#answersAndResults").empty();
+    questionsAsked = [];
+    startCountdown();
+    showQuestion();
+})
 
 });
