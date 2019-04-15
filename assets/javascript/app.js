@@ -4,28 +4,37 @@ $(document).ready(function () {
         {
             question: "What was The Lion King originally going to be called?",
             options: ["King of the Jungle", "Pride Rock", "Circle of Life", "A Lion's Tale"],
-            correct: 0
+            correct: 0,
+            image1: "assets/images/LionKingHappy.jpg",
+            image2: "assets/images/LionKingSad.jpg"
         },
         {
             question: "How old is Crush in Finding Nemo",
             options: ["35 years old", "85 years old", "150 years old", "175 years old"],
-            correct: 2
+            correct: 2,
+            image1: "assets/images/NemoHappy.jpg",
+            image2: "assets/images/NemoSad.jpg"
         },
         {
             question: "In Snow White and the Seven Dwarfs, what does the wicked Queen ask the Huntsman to bring back to her to prove Snow White is dead?",
             options: ["Her finger", "Her necklace", "A lock of her hair", "Her heart"],
-            correct: 3
+            correct: 3,
+            image1: "assets/images/SnowWhiteHappy.jpg",
+            image2: "assets/images/SnowWhiteSad.jpg"
         },
         {
             question: "The woman who voices Belle from Beauty and the Beast also voices what other lead Disney role?",
             options: ["Ariel from The Little Mermaid", "Esmeralda from The Hunchback of Norte Dame", "Merida from Brave", "Meg from Hercules"],
-            correct: 3
-
+            correct: 3,
+            image1: "assets/images/BeautyHappy.jpg",
+            image2: "assets/images/BeautySad.jpg"
         },
         {
             question: "What is a phrase Woody from Toy Story does NOT say when you pull his string? ",
             options: ["That's not my horse!", "Reach for the sky!", "Somebody's poisoned the water hole!", "There's a snake in my boot!"],
-            correct: 0
+            correct: 0,
+            image1: "assets/images/WoodyHappy.jpg",
+            image2: "assets/images/WoodySad.jpg"
         }];
 
 
@@ -34,6 +43,7 @@ $(document).ready(function () {
 var correct = 0;
 var incorrect = 0;
 var unanswered = 0;
+
 var questionsAsked = [];
 var timerRunning = false;
 var interval;
@@ -43,14 +53,14 @@ var numberOfQuestions = quiz.length;
 var userGuess = "";
 
 $("#reset").hide();
-// On clicking start button, starts game, starts countdown
+// On clicking start button, hides start button,starts game, starts countdown
 $("#start").on("click", function() {
     $("#start").hide();
     startCountdown();
     showQuestion();
 })
 
-// function that starts a timer, set interval so it decreases by one second and runs the game
+// function that starts a timer, set interval so it decreases by one second
 function startCountdown() {
     if(timerRunning == false) {
         interval = setInterval(countdown, 1000);
@@ -58,15 +68,16 @@ function startCountdown() {
     }
 }
 
-// display timer on screen
+// display timer on screen, decreases time
 function countdown() {
     $("#quiz-timer").html("<h2> Time remaining: " + timer + "<h2>");
     timer--;
     console.log(timer);
+    // if timer runs out, display out of time, stop timer, add to unanswered
     if (timer === -1) {
-        console.log("stop timer")
-        // if timer hits -1, display answer and stop timer
-        $("#answersAndResults").html("<h3>You ran out of time! The correct answer is " + randomQuestion.options[randomQuestion.correct] + "</h3>");
+        $("#question").hide();
+        $("#answersAndResults").html("<p>You ran out of time! The correct answer is: " + randomQuestion.options[randomQuestion.correct] + "</p>");
+        $("#answersAndResults").append("<img src=" + randomQuestion.image2 + ">");
         stopTimer();
         unanswered++;
         scoreTracker();
@@ -80,8 +91,10 @@ function stopTimer() {
 }
 
 function showQuestion() {
-    // random question chosen from quiz array
+    // random question chosen from quiz array, displays question
     randomQuestion = quiz[Math.floor(Math.random() * numberOfQuestions)];
+    $("#question").show();
+    // if question has been asked, pick another question
     if (questionsAsked.indexOf(randomQuestion.question) !== -1) {
         return showQuestion();
     } else {
@@ -89,7 +102,7 @@ function showQuestion() {
     console.log("Correct answer is " + randomQuestion.correct);
     // displays question
     $("#question").html("<h3>" + randomQuestion.question + "<h3>");
-    // creating divs for each answer choice, adding classes, adding questions to divs
+    // creating divs for each answer choice, adding classes, adding answer choices to divs
     for (var i = 0; i < randomQuestion.options.length; i++) {
         var answers = $("<div>")
         answers.addClass("answerOption");
@@ -97,7 +110,7 @@ function showQuestion() {
         console.log(randomQuestion.options[i]);
         // assigning different attribute to each answer option to distiguish
         answers.attr("data-value", i);
-        // appending answer options to site
+        // appending answer options
         $("#answersAndResults").append(answers);
     }
     }
@@ -107,13 +120,16 @@ function showQuestion() {
         // store value of user's guess as integer to compare with correct answer
         userGuess = parseInt($(this).attr("data-value"));
         console.log("User guess answer is " + userGuess);
+        $("#question").hide();
 
         if(userGuess === randomQuestion.correct) {
             correct++;
             userGuess = "";
             stopTimer()
             console.log("Is the timer running? " + timerRunning)
-            $("#answersAndResults").html("<h3>Correct!!</h3>")
+            $("#answersAndResults").html("<p>Correct!!</p>")
+            // appending happy image
+            $("#answersAndResults").append("<img src=" + randomQuestion.image1 + ">");
             scoreTracker();
             determineFinish();
         } else {
@@ -121,7 +137,9 @@ function showQuestion() {
             userGuess = "";
             stopTimer();
             console.log("Is the timer running? " + timerRunning)
-            $("#answersAndResults").html("<h3>Sorry, the correct answer is " + randomQuestion.options[randomQuestion.correct])
+            $("#answersAndResults").html("<p>Sorry, the correct answer is: " + randomQuestion.options[randomQuestion.correct] + "</p>");
+            // appending sad image
+            $("#answersAndResults").append("<img src=" + randomQuestion.image2 + ">");
             scoreTracker();
             determineFinish();
         }
@@ -158,9 +176,9 @@ function determineFinish() {
 function displayFinish() {
     $("#question").empty();
     $("#question").html("<h3>All done, here's how you did!<h3>")
-    $("#answersAndResults").append("<h4>Correct: " + correct + "<h4>");
-    $("#answersAndResults").append("<h4>Incorrect: " + incorrect + "<h4>");
-    $("#answersAndResults").append("<h4>Unanswerd: "+ unanswered + "<h4>");
+    $("#answersAndResults").append("<p>Correct: " + correct + "<p>");
+    $("#answersAndResults").append("<p>Incorrect: " + incorrect + "<p>");
+    $("#answersAndResults").append("<p>Unanswerd: "+ unanswered + "<p>");
     $("#reset").show();
     correct = 0;
     incorrect = 0;
