@@ -69,6 +69,7 @@ function countdown() {
         $("#answersAndResults").html("<h3>You ran out of time! The correct answer is " + randomQuestion.options[randomQuestion.correct] + "</h3>");
         stopTimer();
         unanswered++;
+        scoreTracker();
         determineFinish();
     }
 }
@@ -81,6 +82,9 @@ function stopTimer() {
 function showQuestion() {
     // random question chosen from quiz array
     randomQuestion = quiz[Math.floor(Math.random() * numberOfQuestions)];
+    if (questionsAsked.indexOf(randomQuestion.question) !== -1) {
+        return showQuestion();
+    } else {
     console.log(randomQuestion.question);
     console.log("Correct answer is " + randomQuestion.correct);
     // displays question
@@ -96,42 +100,52 @@ function showQuestion() {
         // appending answer options to site
         $("#answersAndResults").append(answers);
     }
-
+    }
 
     // upon user clicking one of the answer options
     $(".answerOption").on("click", function() {
         // store value of user's guess as integer to compare with correct answer
         userGuess = parseInt($(this).attr("data-value"));
         console.log("User guess answer is " + userGuess);
+        timerRunning == false;
 
         if(userGuess === randomQuestion.correct) {
             correct++;
             userGuess = "";
             stopTimer()
             $("#answersAndResults").html("<h3>Correct!!</h3>")
+            scoreTracker();
             determineFinish();
         } else {
             incorrect++;
             userGuess = "";
             stopTimer();
-            $("answersAndResults").html("<h3>Sorry, the correct answer is " + randomQuestion.options[randomQuestion.correct])
+            $("#answersAndResults").html("<h3>Sorry, the correct answer is " + randomQuestion.options[randomQuestion.correct])
+            scoreTracker();
             determineFinish();
         }
     
     })
 }
+function scoreTracker() {
+    console.log("Number correct: " + correct);
+    console.log("Number incorrect: " + incorrect);
+    console.log("Number unaswered: " + unanswered);
+}
 
 function determineFinish() {
     // add question asked into questionsAsked array
-    questionsAsked.push(randomQuestion);
+    questionsAsked.push(randomQuestion.question);
 
-    clearAnswers = setTimeout(function() {
+    setTimeout(function() {
         $("#answersAndResults").empty();
         timer = 15;
+        console.log(timer);
     
     if (correct + incorrect + unanswered === numberOfQuestions) {
         displayFinish();
     } else {
+        console.log(questionsAsked);
         startCountdown();
         showQuestion();
     }
@@ -148,6 +162,9 @@ function displayFinish() {
     $("#answersAndResults").append("<h4>Incorrect: " + incorrect + "<h4>");
     $("#answersAndResults").append("<h4>Unanswerd: "+ unanswered + "<h4>");
     $("#reset").show();
+    correct = 0;
+    incorrect = 0;
+    unanswered = 0;
 }
 
 });
