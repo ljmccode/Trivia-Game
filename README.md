@@ -7,6 +7,6 @@ Do you think you're the master of all things Disney? Take this trivia quiz to fi
 * HTML
 * CSS
 * Javascript
-* JQuery
+* jQuery
 * Google Fonts
 * Bootstrap
